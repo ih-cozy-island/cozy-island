@@ -1,0 +1,38 @@
+.toggle-button:hover {
+  background-color: #ddd;
+}
+
+.toggle-button {
+  padding: 0px 8px;
+  border: 1px solid #eee;
+  color: gray;
+  cursor: pointer;
+  background-color: #fafafa;
+  border-radius: 3;
+  user-select: none;
+}
+
+.toggle-button.on {
+  color: black;
+  background-color: #ccc;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  gap: 12px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.input + .input {
+  margin-top: 2px;
+}
