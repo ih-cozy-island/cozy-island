@@ -1,3 +1,4 @@
+import { FaEdit, FaHome, FaPlus, FaTrashAlt } from "react-icons/fa";
 import { calcHomeCoziness } from "./coziness";
 import {
   Card,
@@ -25,16 +26,19 @@ export function Homes(props: {
       style={{
         backgroundColor: props.mode == "edit" ? "#ffeaea" : undefined,
         minWidth: 300,
+        overflowY: "auto",
+        height: "calc(100vh - 128px)",
+        scrollbarWidth: "thin",
       }}
     >
       <HeadRow>
         <Row style={{ position: "absolute", left: 0, gap: 4 }}>
           <ToggleButton on={props.mode == "edit"} onToggle={props.toggleMode}>
-            E
+            <FaEdit />
           </ToggleButton>
           {props.mode == "edit" && (
             <ToggleButton on={props.mode == "edit"} onToggle={props.addHome}>
-              +
+              <FaPlus />
             </ToggleButton>
           )}
         </Row>
@@ -101,20 +105,22 @@ function Home(props: {
             onToggle={() => props.deleteHome(props.home.id)}
             style={{ position: "absolute", left: 0 }}
           >
-            X
+            <FaTrashAlt />
           </ToggleButton>
         )}
         <div
           style={{
-            backgroundColor: props.home.skin ? "#dddddd" : undefined,
-            paddingLeft: 8,
-            paddingRight: 8,
-            borderRadius: 2,
-            cursor: "pointer",
             fontWeight: 600,
+            position: "relative",
           }}
-          onClick={() => props.toggleSkin(!props.home.skin)}
         >
+          <ToggleButton
+            on={props.home.skin}
+            onToggle={() => props.toggleSkin(!props.home.skin)}
+            style={{ position: "absolute", left: -32 }}
+          >
+            <FaHome />
+          </ToggleButton>
           {props.home.name}
         </div>
       </Row>
@@ -155,21 +161,32 @@ function Spot(props: {
         on={props.skin}
         onToggle={() => props.toggleSkin(!props.skin)}
       >
-        S
+        <FaHome />
       </ToggleButton>
       <input
+        style={{ width: 100 }}
         value={level}
         type="number"
         min={0}
         max={100}
         onChange={(e) => {
           const value = parseIntOrUndef(e.target.value);
-          props.changeLevel(value);
+          props.changeLevel(minmax(value, 0, 100));
         }}
       />
     </InputRow>
   );
 }
+
+function minmax(value: number | undefined, min?: number, max?: number) {
+  let val = value;
+  if (val != undefined) {
+    val = min != undefined ? Math.max(min, val) : val;
+    val = max != undefined ? Math.min(max, val) : val;
+  }
+  return val;
+}
+
 const spotNames: { [key in ResourceType]?: string } = {
   Wood: "Wheat Field",
   Rock: "Central Market",

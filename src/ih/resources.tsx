@@ -1,3 +1,4 @@
+import { FaEdit } from "react-icons/fa";
 import {
   Card,
   Column,
@@ -17,7 +18,7 @@ export function AvailableResources(props: {
   changeResAmount: (type: ResourceType, amount: number) => void;
 }) {
   return (
-    <Card style={{ minWidth: 300, maxWidth: 500 }}>
+    <Card style={{ minWidth: 300, maxWidth: 500, height: "100%" }}>
       <HeadRow style={{ marginBottom: 40 }}>
         <div style={{ fontWeight: 700, padding: "12px 0px" }}>Resources</div>
         <ToggleButton
@@ -25,7 +26,7 @@ export function AvailableResources(props: {
           onToggle={props.toggleMode}
           style={{ position: "absolute", left: 0 }}
         >
-          E
+          <FaEdit />
         </ToggleButton>
       </HeadRow>
       <Column>
@@ -104,7 +105,7 @@ export function ResAmount(props: {
     >
       <span>{props.resType}</span>
       {props.mode == "edit" ? (
-        <input
+        <input style={{width: 120}}
           value={value ?? ""}
           type="number"
           min={0}

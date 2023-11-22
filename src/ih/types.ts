@@ -27,7 +27,6 @@ export interface IHome {
 }
 
 export interface IIsland {
-  id: string;
   coziness: number;
   homes: IHome[];
   resources: ResourceMap;

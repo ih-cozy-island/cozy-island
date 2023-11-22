@@ -1,11 +1,11 @@
-import { IIsland } from "./types";
-
+import { Column, Row } from "./elements";
+import { Head } from "./head";
 import { Homes } from "./homes";
 import { initHome, useIslandHooks } from "./island-hooks";
 import { AvailableResources } from "./resources";
+import { IIsland } from "./types";
 
 const initialState: IIsland = {
-  id: "island1",
   coziness: 0,
   homes: [initHome("Residence 1")],
   resources: {
@@ -33,11 +33,13 @@ export function CloudIsland() {
     toggleSpotSkin,
     addHome,
     deleteHome,
+    prof,
   } = useIslandHooks(initialState);
 
   return (
-    <div>
-      <div style={{ display: "flex", gap: 12 }}>
+    <Column style={{ gap: 12 }}>
+      <Head {...prof} />
+      <Row style={{ gap: 12 }}>
         <AvailableResources
           resources={state.resources}
           coziness={state.coziness}
@@ -55,7 +57,7 @@ export function CloudIsland() {
           addHome={addHome}
           deleteHome={deleteHome}
         />
-      </div>
-    </div>
+      </Row>
+    </Column>
   );
 }

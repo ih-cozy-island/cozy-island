@@ -3,12 +3,16 @@
 }
 
 .toggle-button {
-  padding: 0px 8px;
+  display: flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #eee;
   color: gray;
   cursor: pointer;
   background-color: #fafafa;
-  border-radius: 3;
+  border-radius: 4px;
   user-select: none;
 }
 

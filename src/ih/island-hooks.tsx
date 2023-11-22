@@ -4,13 +4,18 @@ import { costsFineRes, costsRes } from "./costs";
 import { calcIslandCoziness } from "./coziness";
 import { IHome, IIsland, ISpot, ResourceType } from "./types";
 
-function saveState(state: IIsland) {
-  const key = "CloudIsland";
+function saveState(state: IIsland, name: string) {
+  const key = "profile-" + name;
   window.localStorage.setItem(key, JSON.stringify(state));
+  window.localStorage.setItem("lastProfile", name);
 }
 
-function loadState(): IIsland | null {
-  const str = window.localStorage.getItem("CloudIsland");
+function getLastProfile() {
+  return window.localStorage.getItem("lastProfile") || "default";
+}
+
+function loadState(name: string): IIsland | null {
+  const str = window.localStorage.getItem("profile-" + name);
   if (str) {
     const state = JSON.parse(str);
     return state;
@@ -70,11 +75,46 @@ export function useIslandHooks(initialState: IIsland) {
   const [state, setState] = useState<IIsland>(initialState);
   // onLoad
   useEffect(() => {
-    const island = loadState();
+    const profileName = getLastProfile();
+    const island = loadState(profileName);
     if (island) {
       setState(island);
     }
   }, []);
+
+  const [profile, setProfile] = useState<[string, string]>([
+    getLastProfile(),
+    "",
+  ]);
+
+  const profiles = Object.keys(window.localStorage)
+    .filter((p) => p.startsWith("profile-"))
+    .map((p) => p.substring("profile-".length));
+
+  const loadProfile = useCallback((name: string) => {
+    const island = loadState(name);
+    if (island) {
+      setState(island);
+    }
+  }, []);
+
+  const saveProfile = useCallback(() => {
+    saveState(state, profile[0]);
+  }, [state, profile[0]]);
+
+  const deleteProfile = useCallback((profileName: string) => {
+    window.localStorage.removeItem("profile-" + profileName);
+    window.localStorage.setItem("lastProfile", "");
+  }, []);
+
+  const prof = {
+    profile,
+    setProfile,
+    profiles,
+    loadProfile,
+    saveProfile,
+    deleteProfile,
+  };
 
   const changeLevel = useCallback(
     (homeIdx: number, spotIdx: number, newLevel?: number) => {
@@ -152,9 +192,6 @@ export function useIslandHooks(initialState: IIsland) {
         produce(prev, (draft) => {
           draft.homeMode = prev.homeMode == "default" ? "edit" : "default";
           draft.coziness = calcIslandCoziness(draft.homes);
-          if (draft.homeMode == "default") {
-            saveState(draft);
-          }
         })
       ),
     []
@@ -165,9 +202,6 @@ export function useIslandHooks(initialState: IIsland) {
       setState((prev) =>
         produce(prev, (draft) => {
           draft.resMode = prev.resMode == "default" ? "edit" : "default";
-          if (draft.resMode == "default") {
-            saveState(draft);
-          }
         })
       ),
     []
@@ -212,5 +246,6 @@ export function useIslandHooks(initialState: IIsland) {
     toggleResMode,
     addHome,
     deleteHome,
+    prof,
   };
 }
